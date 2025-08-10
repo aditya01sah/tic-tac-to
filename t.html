@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tic-Tac-Too</title>
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #f0f0f0;
+}
+
+h1 {
+  margin-top: 20px;
+}
+
+#game {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-gap: 5px;
+  margin: 20px auto;
+  width: 310px;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  background: white;
+  font-size: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid #444;
+  user-select: none;
+}
+
+.cell:hover {
+  background: #eee;
+}
+
+#status {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color:red;
+}
+
+  </style>
+</head>
+<body>
+  <h1>Tic Tac Too</h1>
+  <div id="game">
+    <div class="cell" onclick="makeMove(0)"></div>
+    <div class="cell" onclick="makeMove(1)"></div>
+    <div class="cell" onclick="makeMove(2)"></div>
+    <div class="cell" onclick="makeMove(3)"></div>
+    <div class="cell" onclick="makeMove(4)"></div>
+    <div class="cell" onclick="makeMove(5)"></div>
+    <div class="cell" onclick="makeMove(6)"></div>
+    <div class="cell" onclick="makeMove(7)"></div>
+    <div class="cell" onclick="makeMove(8)"></div>
+  </div>
+  <p id="status">Player X's Turn</p>
+  <button onclick="resetGame()">Restart</button>
+
+  <script >
+    let board = ["", "", "", "", "", "", "", "", ""];
+let currentPlayer = "X";
+let gameActive = true;
+
+const statusDisplay = document.getElementById("status");
+const winCombos = [
+  [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+  [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+  [0, 4, 8], [2, 4, 6]             // diagonals
+];
+
+function makeMove(index) {
+  if (!gameActive || board[index] !== "") return;
+
+  board[index] = currentPlayer;
+  document.getElementsByClassName("cell")[index].textContent = currentPlayer;
+
+  if (checkWin()) {
+    statusDisplay.textContent = `Player ${currentPlayer} Wins!`;
+    gameActive = false;
+  } else if (board.every(cell => cell !== "")) {
+    statusDisplay.textContent = "It's a Draw!";
+    gameActive = false;
+  } else {
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
+    statusDisplay.textContent = `Player ${currentPlayer}'s Turn`;
+  }
+}
+
+function checkWin() {
+  return winCombos.some(combo => {
+    return combo.every(index => board[index] === currentPlayer);
+  });
+}
+
+function resetGame() {
+  board = ["", "", "", "", "", "", "", "", ""];
+  currentPlayer = "X";
+  gameActive = true;
+  statusDisplay.textContent = `Player ${currentPlayer}'s Turn`;
+
+  Array.from(document.getElementsByClassName("cell")).forEach(cell => {
+    cell.textContent = "";
+  });
+}
+
+  </script>
+</body>
+</html>
